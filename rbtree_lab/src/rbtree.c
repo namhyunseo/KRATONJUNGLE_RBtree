@@ -14,6 +14,7 @@ void delete_rbtree(rbtree *t) {
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
+  printf("Hello \n");
   //초기값 설정
   node_t *cur = t->root;
   node_t *prev = t->nil;
