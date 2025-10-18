@@ -3,12 +3,13 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
-
+ 
 // new_rbtree should return rbtree struct with null root node
 void test_init(void)
 {
   rbtree *t = new_rbtree();
-  assert(t != NULL);
+  assert(t != NULL); // assert -> expr가 0혹은 실패 시 프로그램을 중단
+// SENTINEL -> 조건 분기 문 사이에 코드를 컴파일할지 말지 결정
 #ifdef SENTINEL
   assert(t->nil != NULL);
   assert(t->root == t->nil);
