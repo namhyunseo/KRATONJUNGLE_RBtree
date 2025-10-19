@@ -4,20 +4,20 @@
 #include <stdio.h>
 
 rbtree *new_rbtree(void) {
-  rbtree *p = calloc(1, sizeof(*p));
-  if(!p){
+  rbtree *t = calloc(1, sizeof(*t));
+  if(!t){
     return NULL;
   }
   //초깃값 설정
-  p->nil = calloc(1, sizeof(node_t));
-  if(!p->nil){
-    free(p);
+  t->nil = calloc(1, sizeof(node_t));
+  if(!t->nil){
+    free(t);
     return NULL;
   }
-  p->nil->color = RBTREE_BLACK;
-  p->nil->left = p->nil->right = p->nil->parent = p->nil;
-  p->root = p->nil;
-  return p;
+  t->nil->color = RBTREE_BLACK;
+  t->nil->left = t->nil->right = t->nil->parent = t->nil;
+  t->root = t->nil;
+  return t;
 }
 
 void delete_rbtree(rbtree *t) {
@@ -27,15 +27,13 @@ void delete_rbtree(rbtree *t) {
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
   //초기값 설정
-  printf("hello10 \n");
   node_t *cur = t->root;
   node_t *prev;
 
   // key값으로 새로운 노드 생성
   node_t *z = malloc(sizeof(node_t));
-  printf("mall : 5%p \n", z);
   if(!z){
-    exit(EXIT_FAILURE);
+    return NULL;
   }
   z->key = key;
   z->color = RBTREE_RED;
