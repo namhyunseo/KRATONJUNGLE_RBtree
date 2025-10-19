@@ -1,55 +1,74 @@
 #include "rbtree.h"
 
 #include <stdlib.h>
+#include <stdio.h>
 
 rbtree *new_rbtree(void) {
-  rbtree *p = (rbtree *)calloc(1, sizeof(rbtree));
-  // TODO: initialize struct if needed
+  rbtree *p = calloc(1, sizeof(*p));
+  if(!p){
+    return NULL;
+  }
+  //초깃값 설정
+  p->nil = calloc(1, sizeof(node_t));
+  if(!p->nil){
+    free(p);
+    return NULL;
+  }
+  p->nil->color = RBTREE_BLACK;
+  p->nil->left = p->nil->right = p->nil->parent = p->nil;
+  p->root = p->nil;
   return p;
 }
 
 void delete_rbtree(rbtree *t) {
-  // TODO: reclaim the tree nodes's memory
+  node_t *cur = t->root; //동적으로 받아야 하나?
   free(t); 
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
-  printf("Hello \n");
   //초기값 설정
+  printf("hello10 \n");
   node_t *cur = t->root;
-  node_t *prev = t->nil;
+  node_t *prev;
+
   // key값으로 새로운 노드 생성
-  node_t z;
-  z.key = key;
-  z.color = RBTREE_RED;
-  z.left = NULL;
-  z.right = NULL;
-  z.parent = NULL;
+  node_t *z = malloc(sizeof(node_t));
+  printf("mall : 5%p \n", z);
+  if(!z){
+    exit(EXIT_FAILURE);
+  }
+  z->key = key;
+  z->color = RBTREE_RED;
+  z->left = t->nil;
+  z->right = t->nil;
+  z->parent = t->nil;
 
   // root가 없을 때
   if(cur == t->nil){
-    t->root = &z;
+    t->root = z;
+    z->color = RBTREE_BLACK;
+    return z;
   }
 
   // tree의 root부터 key가 들어갈 자리 탐색
   while(cur != t->nil){ //조건 이렇게 세우는게 맞는지 ;;
     prev = cur;
-    if(key < cur){
+    if(z->key < cur->key){
       cur = cur->left;
     }else cur = cur->right;
   }
   
   // z가 부모를 선택!! 와!!!
-  z.parent = prev;
+  z->parent = prev;
 
   // 부모가 자식을 어떤 방에 넣을지 확인
-  if(key < prev->key){
-    prev->left = &z;
-  }else prev->right = &z;
+  if(z->key < prev->key){
+    prev->left = z;
+  }else prev->right = z;
 
-  fix(t, &z);
+  // fix(t, z);
 
-  return t->root;
+  return z;
 }
 
 void fix(rbtree* t, node_t *z){
@@ -91,8 +110,10 @@ void leftRotate(rbtree* t, node_t *z){
   z->right = rightChd->left;
 
   if(rightChd->left != t->nil){
-    rightChd->parent = z;
+    rightChd->left->parent = z;
   }
+  
+  rightChd->parent = z->parent;
   if(z == t->root){
     t->root = rightChd;
   }else if(z == z->parent->left){

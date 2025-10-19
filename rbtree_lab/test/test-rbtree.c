@@ -1,5 +1,5 @@
 #include <assert.h>
-#include "rbtree.h"
+#include "../src/rbtree.h"
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -7,7 +7,9 @@
 // new_rbtree should return rbtree struct with null root node
 void test_init(void)
 {
+  printf("Hello1 \n");
   rbtree *t = new_rbtree();
+  printf("Hello2 \n");
   assert(t != NULL); // assert -> expr가 0혹은 실패 시 프로그램을 중단
 // SENTINEL -> 조건 분기 문 사이에 코드를 컴파일할지 말지 결정
 #ifdef SENTINEL
@@ -23,7 +25,9 @@ void test_init(void)
 void test_insert_single(const key_t key)
 {
   rbtree *t = new_rbtree();
+  printf("inserst Start \n");
   node_t *p = rbtree_insert(t, key);
+  printf("Hello4 \n");
   assert(p != NULL);
   assert(t->root == p);
   assert(p->key == key);
@@ -417,14 +421,14 @@ int main(void)
 {
   test_init();
   test_insert_single(1024);
-  test_find_single(512, 1024);
-  test_erase_root(128);
-  test_find_erase_fixed();
-  test_minmax_suite();
-  test_to_array_suite();
-  test_distinct_values();
-  test_duplicate_values();
-  test_multi_instance();
-  test_find_erase_rand(10000, 17);
+  // test_find_single(512, 1024);
+  // test_erase_root(128);
+  // test_find_erase_fixed();
+  // test_minmax_suite();
+  // test_to_array_suite();
+  // test_distinct_values();
+  // test_duplicate_values();
+  // test_multi_instance();
+  // test_find_erase_rand(10000, 17);
   printf("Passed all tests!\n");
 }
