@@ -188,8 +188,7 @@ void test_multi_instance() {
 // The values of right subtree should be greater than or equal to the current
 // node
 
-static bool search_traverse(const node_t *p, key_t *min, key_t *max,
-                            node_t *nil) {
+static bool search_traverse(const node_t *p, key_t *min, key_t *max,node_t *nil) {
   if (p == nil) {
     return true;
   }

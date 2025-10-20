@@ -1,22 +1,4 @@
-# .PHONY: help build test
-
-# help:
-# # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
-# 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
-
-# build:
-# build: ## Build executables
-# 	$(MAKE) -C src
-
-# test:
-# test: ## Test rbtree implementation
-# 	$(MAKE) -C test test
-	
-# clean:
-# clean: ## Clear build environment
-# 	$(MAKE) -C src clean
-# 	$(MAKE) -C test clean
-
+##############################################################
 # .PHONY: 이 타겟들은 실제 파일이 아니므로 항상 실행됩니다.
 .PHONY: help build test clean drive
 
@@ -53,3 +35,23 @@ drive: ## 프로그램을 빌드, 실행, 정리까지 한 번에!
 clean: ## 빌드하면서 만들어진 파일들을 청소해요!
 	$(MAKE) -C src clean
 	rm -f ./test/test-rbtree
+
+
+# .PHONY: help build test
+
+# help:
+# # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
+# 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
+
+# build:
+# build: ## Build executables
+# 	$(MAKE) -C src
+
+# test:
+# test: ## Test rbtree implementation
+# 	$(MAKE) -C test test
+	
+# clean:
+# clean: ## Clear build environment
+# 	$(MAKE) -C src clean
+# 	$(MAKE) -C test clean

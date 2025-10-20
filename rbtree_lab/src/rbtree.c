@@ -6,6 +6,7 @@
 static void leftRotate(rbtree *t, node_t *z);
 static void rightRotate(rbtree *t, node_t *z);
 static void fix(rbtree *t, node_t *z);
+static void removeNode(rbtree* t, node_t *cur);
 
 rbtree *new_rbtree(void) {
   rbtree *t = calloc(1, sizeof(*t));
@@ -25,7 +26,18 @@ rbtree *new_rbtree(void) {
 }
 
 void delete_rbtree(rbtree *t) {
-  
+  removeNode(t, t->root);
+  free(t->nil);
+  free(t);
+}
+
+void removeNode(rbtree* t, node_t *x){
+  if(x!=t->nil)
+  {
+    removeNode(t, x->left);
+    removeNode(t, x->right);
+    free(x);
+  }
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
