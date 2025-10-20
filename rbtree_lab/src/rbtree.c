@@ -3,6 +3,10 @@
 #include <stdlib.h>
 #include <stdio.h>
 
+static void leftRotate(rbtree *t, node_t *z);
+static void rightRotate(rbtree *t, node_t *z);
+static void fix(rbtree *t, node_t *z);
+
 rbtree *new_rbtree(void) {
   rbtree *t = calloc(1, sizeof(*t));
   if(!t){
@@ -21,8 +25,7 @@ rbtree *new_rbtree(void) {
 }
 
 void delete_rbtree(rbtree *t) {
-  node_t *cur = t->root; //동적으로 받아야 하나?
-  free(t); 
+  
 }
 
 node_t *rbtree_insert(rbtree *t, const key_t key) {
@@ -64,29 +67,41 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
     prev->left = z;
   }else prev->right = z;
 
-  // fix(t, z);
+  fix(t, z);
 
   return z;
 }
-
+//값이 같을 경우 처리
+// 4 2 3 케이스 오류  
 void fix(rbtree* t, node_t *z){
   while(z->parent->color == RBTREE_RED){
     node_t *par = z->parent;
-    if(par == par->parent->left){
+    if(par == par->parent->left){ //left로 치우친 경우
       node_t *uncle = par->parent->right;
-      if(uncle->color == RBTREE_RED){ //삼촌이 레드일 때 
+      if(uncle->color == RBTREE_RED){ //삼촌이 레드일 때 case 1
         par->parent->color = RBTREE_RED;
         par->color = RBTREE_BLACK;
         uncle->color = RBTREE_BLACK;
         z = par->parent;
-      }else if(z == z->parent->right){ //삼촌이 감둥이고, 부모의 오른쪽일 때
+      }else if(z == par->right){ //삼촌이 감둥이고, 부모의 오른쪽일 때 case2
+        // rotate 잘 돌렸는지 확인
+        // printf("before grand : %p \n", par->parent);
+        // printf("my parent : %p \n", z->parent);
         leftRotate(t, par);
-        par->color = RBTREE_RED;
+        // printf("me : %p \n", z);
+        // printf("my parent : %p \n", z->parent);
+        // printf("my left : %p \n", z->left);
+        z->parent->color = RBTREE_RED;
         z->color = RBTREE_BLACK;
+        z = z->parent;
+        rightRotate(t, z);
+      }else if(z == par->left){ // case 3
+        par->parent->color = RBTREE_RED;
+        par->color = RBTREE_BLACK;
         rightRotate(t, par->parent);
       }
     }else{
-      node_t *uncleR = par->parent->right;
+      node_t *uncleR = par->parent->left;
       if(uncleR->color == RBTREE_RED){
         par->parent->color = RBTREE_RED;
         par->color = RBTREE_BLACK;
@@ -96,6 +111,10 @@ void fix(rbtree* t, node_t *z){
         rightRotate(t, par);
         par->color = RBTREE_RED;
         z->color = RBTREE_BLACK;
+        leftRotate(t, par->parent);
+      }else if(z == par->right){
+        par->parent->color = RBTREE_RED;
+        par->color = RBTREE_BLACK;
         leftRotate(t, par->parent);
       }
     }
@@ -107,11 +126,13 @@ void leftRotate(rbtree* t, node_t *z){
   node_t *rightChd = z->right;
   z->right = rightChd->left;
 
+  // 왼쪽에 서브트리가 있을 경우 이동
   if(rightChd->left != t->nil){
     rightChd->left->parent = z;
   }
-  
+  // rigthchd를 z의 부모의 밑으로 옮긴다.
   rightChd->parent = z->parent;
+  // printf("rightParent :%p\n", rightChd->parent);
   if(z == t->root){
     t->root = rightChd;
   }else if(z == z->parent->left){
@@ -124,12 +145,13 @@ void leftRotate(rbtree* t, node_t *z){
   z->parent = rightChd;
 }
 void rightRotate(rbtree* t, node_t *z){
-    node_t *leftChd = z->left;
+  node_t *leftChd = z->left;
   z->left = leftChd->right;
 
   if(leftChd->right != t->nil){
     leftChd->parent = z;
   }
+  leftChd->parent = z->parent;
   if(z == t->root){
     t->root = leftChd;
   }else if(z == z->parent->right){
