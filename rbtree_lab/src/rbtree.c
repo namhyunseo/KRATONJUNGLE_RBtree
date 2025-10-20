@@ -7,6 +7,8 @@ static void leftRotate(rbtree *t, node_t *z);
 static void rightRotate(rbtree *t, node_t *z);
 static void fix(rbtree *t, node_t *z);
 static void removeNode(rbtree* t, node_t *cur);
+static void transplant(rbtree *t, node_t *u, node_t *v);
+
 
 rbtree *new_rbtree(void) {
   rbtree *t = calloc(1, sizeof(*t));
@@ -177,23 +179,66 @@ void rightRotate(rbtree* t, node_t *z){
 }
 
 node_t *rbtree_find(const rbtree *t, const key_t key) {
-  // TODO: implement find
-  return t->root;
+  node_t *cur = t->root;
+  while(cur != t->nil)
+  {
+    if(key < cur->key)
+    {
+      cur = cur->left;
+      continue;
+    }else if(key > cur->key)
+    {
+      cur = cur->right;
+      continue;
+    }else if(key == cur->key)
+    {
+      return cur;
+    }
+  }
+  return NULL;
 }
 
-node_t *rbtree_min(const rbtree *t) {
-  // TODO: implement find
-  return t->root;
+// node_t *rbtree_min(const rbtree *t) {
+// }
+node_t *rbtree_min(rbtree *t, node_t *z) {
+  while(z->left == t->nil)
+  {
+    z = z->left;
+  }
+  return z;
 }
 
 node_t *rbtree_max(const rbtree *t) {
-  // TODO: implement find
-  return t->root;
+
 }
 
 int rbtree_erase(rbtree *t, node_t *p) {
-  // TODO: implement erase
+  node_t *y = p->right;
+  color_t ycolor = y->color;
+
+  if(p->left = t->nil)
+  {
+    node_t *x = p->right;
+    transplant(t, p, x);
+  }
+
   return 0;
+}
+
+void transplant(rbtree *t, node_t *u, node_t *v)
+{
+  if(u->parent == t->nil){
+    t->root = v;
+    v->left = u->left;
+    v->right = u->right;
+  }else if(u == u->parent->left)
+  {
+    u->parent = v;
+  }else{
+    u->parent->right = v;
+  }
+  v->parent = u->parent;
+  free(u);
 }
 
 int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
