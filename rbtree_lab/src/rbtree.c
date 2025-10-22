@@ -90,27 +90,6 @@ node_t *rbtree_insert(rbtree *t, const key_t key) {
 
 //값이 같을 경우 처리
 // 4 2 3 케이스 오류  
-/*
-// par == grand->left
-node_t *grand = par->parent;
-node_t *uncle = grand->right;
-
-if (uncle->color == RBTREE_RED) {             // Case 1
-  par->color   = RBTREE_BLACK;
-  uncle->color = RBTREE_BLACK;
-  grand->color = RBTREE_RED;
-  z = grand;
-} else {                                       // Case 2 → Case 3
-  if (z == par->right) {                       // Case 2: 정규화만
-    z = par;
-    leftRotate(t, z);
-    par = z->parent;                           // 회전 후 갱신
-    grand = par->parent;
-  }
-  par->color = RBTREE_BLACK;                   // Case 3: 색칠 + 회전
-  grand->color = RBTREE_RED;
-  rightRotate(t, grand);                       // 축 = grand
-}*/
 void insert_fix(rbtree* t, node_t *z){
   while(z->parent->color == RBTREE_RED){
     node_t *par = z->parent;
@@ -366,7 +345,17 @@ void delete_fixup(rbtree *t, node_t *z){
   }
 }
 
-int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {
-  // TODO: implement to_array
-  return 0;
+int rbtree_to_array(const rbtree *t, key_t *arr, const size_t n) {  
+  int index = 0;
+  recursiveFairy(t, t->root, arr, &index);
+  return arr;
+}
+
+void recursiveFairy(const rbtree *t, node_t *cur, key_t *arr, int *index) {
+  if (cur == t->nil) {
+    return;
+  }
+  recursiveFairy(t, cur->left, arr, index);
+  arr[(*index)++] = cur->key;
+  recursiveFairy(t, cur->right, arr, index);
 }

@@ -906,10 +906,10 @@ int main(void) {
   RUN_TEST(test_minmax_suite);
   RUN_TEST(test_distinct_values);
   RUN_TEST(test_duplicate_values);
-  // RUN_TEST(test_multi_instance);
+  RUN_TEST(test_multi_instance);
   RUN_TEST(test_erase_root, 128);
   RUN_TEST(test_find_erase_fixed);
-  // RUN_TEST(test_to_array_suite);
+  RUN_TEST(test_to_array_suite);
   RUN_TEST(test_find_erase_rand, 10000, 17);
 
   printf("\n\n🎊 모든 테스트를 완료했어요! 완벽해요! 🎊\n");
